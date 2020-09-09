@@ -1,1 +1,1 @@
-# emptyDir example
+# simple emptyDir volume example using SSE
