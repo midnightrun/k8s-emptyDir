@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -17,10 +20,14 @@ func handleListen(w http.ResponseWriter, r *http.Request) {
 		case <-r.Context().Done():
 			return
 		default:
+			file, err := ioutil.ReadFile("static/exchange")
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "error reading from file: %s\n", err)
+				file = []byte(err.Error())
+			}
 			w.Write(formatSSE(
 				"message",
-				time.Now().String(),
-			))
+				string(file)))
 			w.(http.Flusher).Flush()
 		}
 
@@ -41,7 +48,7 @@ func formatSSE(event, message string) []byte {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./static"))
+	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/", fs)
 	http.HandleFunc("/listen", handleListen)
 

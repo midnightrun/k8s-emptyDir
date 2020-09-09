@@ -1,0 +1,15 @@
+version: '3'
+services:
+  consumer:
+    build: consumer/.
+    ports:
+      - "4000:4000"
+    volumes:
+      - app-volume:/static
+  producer:
+    build: producer/.
+    volumes:
+      - app-volume:/static
+
+volumes:
+  app-volume:
