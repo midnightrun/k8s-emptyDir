@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -20,7 +21,7 @@ func handleListen(w http.ResponseWriter, r *http.Request) {
 		case <-r.Context().Done():
 			return
 		default:
-			file, err := ioutil.ReadFile("static/exchange")
+			file, err := ioutil.ReadFile("/static/exchange")
 			if err != nil {
 				_, _ = fmt.Fprintf(os.Stderr, "error reading from file: %s\n", err)
 				file = []byte(err.Error())
@@ -48,13 +49,15 @@ func formatSSE(event, message string) []byte {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("static"))
+	exePath, err := os.Executable()
+	exeDir := filepath.Dir(exePath)
+	fs := http.FileServer(http.Dir(filepath.Join(exeDir, "/assets")))
 	http.Handle("/", fs)
 	http.HandleFunc("/listen", handleListen)
 
-	log.Println("Listening on :4000")
+	log.Println("Listening on :8080")
 
-	err := http.ListenAndServe(":4000", nil)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
 	}

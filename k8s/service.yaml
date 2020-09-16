@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: k8s-emptydir
+  name: k8s-emptydir
+spec:
+  ports:
+  - name: consumer
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: k8s-emptydir
+  type: ClusterIP

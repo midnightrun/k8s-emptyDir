@@ -3,7 +3,7 @@ services:
   consumer:
     build: consumer/.
     ports:
-      - "4000:4000"
+      - "8080:8080"
     volumes:
       - app-volume:/static
   producer:

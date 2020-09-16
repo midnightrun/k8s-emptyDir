@@ -21,7 +21,7 @@
 		</div>
 	</section>
 	<script type="text/javascript">
-		let eventListener = new EventSource("http://localhost:4000/listen")
+		let eventListener = new EventSource("http://localhost:8080/listen")
 		eventListener.onmessage = (event) => {
 			let {type, data} = event
 			document.getElementById("timestamp").innerHTML = `${data}`;
